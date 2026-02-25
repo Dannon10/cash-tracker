@@ -1,10 +1,10 @@
-# 💰 Cash Tracker
+# Cash Tracker
 
 A modern, AI-powered personal finance app built with React Native and Expo. Track your income and expenses, visualize spending patterns, and log transactions hands-free using your voice.
 
 ---
 
-## 📱 Demo
+## Demo
 
 <!-- Add your screen recording below -->
 > 🎥 **[Watch Demo Video](./demo.mp4)**  
@@ -12,7 +12,7 @@ A modern, AI-powered personal finance app built with React Native and Expo. Trac
 
 ---
 
-## ✨ Features
+## Features
 
 - **Dashboard** — Real-time balance card showing total income, total expenses, and net balance at a glance
 - **Transaction Management** — Add, edit, and delete income/expense transactions with categories, amounts, and dates
@@ -25,7 +25,7 @@ A modern, AI-powered personal finance app built with React Native and Expo. Trac
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -43,7 +43,7 @@ A modern, AI-powered personal finance app built with React Native and Expo. Trac
 
 ---
 
-## 🏗 Project Structure
+## Project Structure
 
 ```
 cashtracker/
@@ -69,7 +69,7 @@ cashtracker/
 
 ---
 
-## 🔐 Authentication Flow
+## Authentication Flow
 
 1. App launches → `initialize()` fetches existing Supabase session
 2. **No session** → User is directed to onboarding (first time) or login
@@ -80,7 +80,7 @@ cashtracker/
 
 ---
 
-## 🎤 Voice Input (Groq AI)
+## Voice Input (Groq AI)
 
 1. User taps the microphone button in the Add Transaction modal
 2. Audio is recorded and sent to the **Groq API** for transcription
@@ -89,7 +89,7 @@ cashtracker/
 
 ---
 
-## 📊 Reports
+## Reports
 
 The Reports screen provides a full financial overview:
 
@@ -101,7 +101,7 @@ The Reports screen provides a full financial overview:
 
 ---
 
-## 🧪 Testing
+## Testing
 
 The project has **33 tests across 7 test suites** covering all critical business logic:
 
@@ -121,7 +121,7 @@ npx jest --colors --runInBand
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -182,23 +182,6 @@ npx expo start
 ```
 
 Then scan the QR code with Expo Go, or press `a` for Android / `i` for iOS simulator.
-
----
-
-## 📹 Adding a Demo Video
-
-To add a video recording to this README:
-
-1. Record your screen using your phone's built-in screen recorder or a tool like [Scrcpy](https://github.com/Genymobile/scrcpy) for Android
-2. Trim and export the video (MP4 recommended)
-3. **Option A — GitHub:** Upload the video directly to your GitHub repo and reference it:
-   ```md
-   https://github.com/yourusername/cashtracker/assets/your-asset-id/demo.mp4
-   ```
-4. **Option B — YouTube/Loom:** Upload to YouTube or Loom and add the link:
-   ```md
-   [![Watch Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://youtu.be/YOUR_VIDEO_ID)
-   ```
 
 ---
 
