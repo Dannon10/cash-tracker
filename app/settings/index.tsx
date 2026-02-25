@@ -1,4 +1,4 @@
-import { View, Pressable, Switch, Alert } from 'react-native'
+import { View, Pressable, Switch, Alert, TouchableOpacity, } from 'react-native'
 import tw from 'twrnc'
 import { Text } from '@/components/AppText'
 import { useAuthStore } from '../../store/useAuthStore'
@@ -6,6 +6,8 @@ import { useThemeStore } from '../../store/useThemeStore'
 import { useRouter } from 'expo-router'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 export default function SettingsScreen() {
     const { user, signOut } = useAuthStore();
@@ -140,6 +142,16 @@ export default function SettingsScreen() {
                     <Text weight='semibold' style={tw`text-sm text-red-500`}>Sign Out</Text>
                 </Pressable>
             </View>
+
+<View style={tw`mt-10 mx-5 p-4 border border-dashed rounded-lg items-center justify-center ${cardBg}`}>
+<TouchableOpacity onPress={async () => {
+    await AsyncStorage.removeItem('hasSeenOnboarding')
+    await signOut()
+    router.replace('/')
+}}>
+  <Text style={tw`text-sm ${textSecondary}`}>Click me to experience onboarding flow again?</Text>
+</TouchableOpacity>
+    </View>
 
         </View>
     )

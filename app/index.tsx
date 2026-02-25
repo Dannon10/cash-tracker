@@ -115,8 +115,8 @@ const SLIDES = [
     {
         type: 'image',
         images: [
-            require('../assets/images/onboarding-add-manual.jpg'),
-            require('../assets/images/onboarding-add-voice1.jpg'),
+            require('../assets/images/onboarding-manual.jpg'),
+            require('../assets/images/onboarding-voice.jpg'),
         ],
         frameLabel: 'Manual & Voice input',
         headline: "Add transactions\nin seconds",
@@ -125,7 +125,7 @@ const SLIDES = [
     },
     {
         type: 'image',
-        images: [require('../assets/images/onboarding-report.jpg')],
+        images: [require('../assets/images/onboarding-report1.jpg')],
         frameLabel: 'Reports & Insights',
         headline: "See your spending\npatterns",
         subtitle: "Beautiful charts and smart insights to help you spend better every month.",

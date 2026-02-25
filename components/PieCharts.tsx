@@ -6,13 +6,20 @@ import EvilIcons from '@expo/vector-icons/EvilIcons'
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'
 
 const COLORS = [
-  '#6366f1',
-  '#f43f5e',
-  '#10b981',
-  '#f59e0b',
-  '#3b82f6',
-  '#ec4899',
-  '#14b8a6',
+  '#f97316', // Food - orange
+  '#eab308', // Bills/Utilities - yellow
+  '#ec4899', // Family - pink
+  '#ef4444', // Healthcare - red
+  '#6b7280', // Fuel - gray
+  '#3b82f6', // Phone/Internet - blue
+  '#8b5cf6', // Education - violet
+  '#f43f5e', // Entertainment - rose
+  '#10b981', // Shopping - emerald
+  '#0ea5e9', // Travel - sky
+  '#a855f7', // Socializing - purple
+  '#0284c7', // Transportation - light blue
+  '#ca8a04', // Housing - amber
+  '#9ca3af', // Miscellaneous - cool gray
 ]
 
 interface Props {
