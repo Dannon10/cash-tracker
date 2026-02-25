@@ -4,10 +4,12 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { router, Tabs } from 'expo-router';
 import { useState } from 'react';
 import tw from 'twrnc';
-import { TransactionProvider } from './context/TransactionContext';
 import AddTransactionModal from '../../components/AddTransactionModal';
 import { useThemeStore } from '../../store/useThemeStore';
 import { BlurView } from 'expo-blur';
+import { useTransactionStore } from '../../store/useTransactionStore'
+
+export { default as ErrorBoundary } from '../../components/ErrorBoundary'
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -24,19 +26,26 @@ export default function TabLayout() {
   const tabBarBorder = isDark ? '#1a1a1a' : '#e5e7eb';
 
   return (
-    <TransactionProvider>
       <View style={tw`flex-1`}>
         <Tabs
           screenOptions={{
             headerShown: true,
             headerTitle: 'Cash Tracker',
             headerShadowVisible: false,
+
+            // APPLY CUSTOM FONT TO HEADER
             headerTitleStyle: {
+              fontFamily: 'ClashGroteskBold',
               fontSize: 22,
-              fontWeight: '800',
               color: headerText,
             },
-            // Glassmorphism header
+
+            // Optional: Apply font to header back button text (iOS)
+            headerBackTitleStyle: {
+              fontFamily: 'ClashGroteskMedium',
+            },
+
+            // Glass Header
             headerBackground: () => (
               <BlurView
                 intensity={90}
@@ -44,11 +53,25 @@ export default function TabLayout() {
                 style={tw`flex-1`}
               />
             ),
+
+            // APPLY CUSTOM FONT TO TAB LABELS
+            tabBarLabelStyle: {
+              fontFamily: 'ClashGroteskMedium',
+              fontSize: 12,
+              marginBottom: 4,
+            },
+
             tabBarStyle: {
               height: 60,
               borderTopColor: tabBarBorder,
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              elevation: 0,        
+              backgroundColor: 'transparent',
             },
-            // Glassmorphism tab bar
+
             tabBarBackground: () => (
               <BlurView
                 intensity={90}
@@ -56,6 +79,7 @@ export default function TabLayout() {
                 style={tw`flex-1`}
               />
             ),
+
             tabBarActiveTintColor: isDark ? '#ffffff' : '#000000',
             tabBarInactiveTintColor: isDark ? '#4b5563' : '#9ca3af',
             headerTitleAlign: 'left',
@@ -65,6 +89,10 @@ export default function TabLayout() {
             name="transactions"
             options={{
               title: 'Dashboard',
+              headerTitleStyle: {
+                fontFamily: 'ClashGroteskSemiBold',
+                fontSize: 22,
+              },
               tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
               headerRight: () => (
                 <AntDesign
@@ -82,6 +110,10 @@ export default function TabLayout() {
             name="reports"
             options={{
               title: 'Reports',
+              headerTitleStyle: {
+                fontFamily: 'ClashGroteskSemiBold',
+                fontSize: 22,
+              },
               tabBarIcon: ({ color }) => <TabBarIcon name="pie-chart" color={color} />,
               headerRight: () => (
                 <AntDesign
@@ -110,6 +142,5 @@ export default function TabLayout() {
           onClose={() => setModalVisible(false)}
         />
       </View>
-    </TransactionProvider>
   );
 }

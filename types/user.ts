@@ -9,7 +9,6 @@ export interface RegisterUser {
 	password: string
 }
 
-// Generic user payload where `name` may be optional in some contexts
 export interface UserPayload {
 	name?: string
 	email: string

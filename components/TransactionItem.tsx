@@ -1,7 +1,7 @@
-// components/TransactionItem.tsx
 import AntDesign from '@expo/vector-icons/AntDesign'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { Alert, Pressable, Text, View } from 'react-native'
+import { Alert, Pressable, View } from 'react-native'
+import { Text } from '@/components/AppText'
 import { Swipeable } from 'react-native-gesture-handler'
 import tw from 'twrnc'
 import { Transaction } from '../types/transactions'
@@ -73,11 +73,11 @@ export default function TransactionItem({ item, onDelete, onEdit }: Props) {
                 {/* Content */}
                 <View style={tw`flex-1`}>
                     <View style={tw`flex-row justify-between items-center mb-1`}>
-                        <Text style={[tw`text-base font-semibold`, { color: textPrimary }]}>
+                        <Text weight='medium' style={[tw`text-base`, { color: textPrimary }]}>
                             {item.title}
                         </Text>
-                        <Text style={[
-                            tw`text-base font-semibold`,
+                        <Text weight='semibold' style={[
+                            tw`text-base`,
                             { color: item.type === 'income' ? '#16a34a' : '#ef4444' }
                         ]}>
                             {item.type === 'income' ? '+' : '-'}₦{Math.abs(item.amount).toLocaleString()}

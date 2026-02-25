@@ -1,4 +1,5 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 import { PieChart } from 'react-native-gifted-charts'
 import EvilIcons from '@expo/vector-icons/EvilIcons'
@@ -48,7 +49,7 @@ export default function PieCharts({
     <View style={[tw`mx-5 mt-5 rounded-3xl p-6`, { backgroundColor: cardBg }]}>
       <View style={tw`flex-row items-center gap-2 mb-1`}>
         <SimpleLineIcons name="pie-chart" size={20} color={textPrimary} />
-        <Text style={[tw`text-lg font-bold`, { color: textPrimary }]}>
+        <Text weight='bold' style={[tw`text-lg`, { color: textPrimary }]}>
           Expenses by Category
         </Text>
       </View>
@@ -70,7 +71,10 @@ export default function PieCharts({
               innerCircleColor={isDark ? '#0f0f0f' : '#ffffff'}
               centerLabelComponent={() => (
                 <View style={tw`items-center`}>
-                  <Text style={[tw`text-2xl font-bold`, { color: textPrimary }]}>
+                  <Text 
+                    weight='bold' 
+                    style={[tw`text-2xl`, 
+                      { color: textPrimary }]}>
                     ₦{totalExpenses.toLocaleString()}
                   </Text>
                   <Text style={[tw`text-xs mt-1`, { color: textSecondary }]}>
@@ -83,7 +87,7 @@ export default function PieCharts({
 
           <View style={[tw`h-px my-5`, { backgroundColor: dividerColor }]} />
 
-          <Text style={[tw`text-base font-bold mb-4`, { color: textPrimary }]}>
+          <Text weight='bold' style={[tw`text-base mb-4`, { color: textPrimary }]}>
             Breakdown
           </Text>
 
@@ -97,7 +101,7 @@ export default function PieCharts({
                       { backgroundColor: item.color },
                     ]}
                   />
-                  <Text style={[tw`text-sm font-medium`, { color: textPrimary }]}>
+                  <Text weight='medium' style={[tw`text-sm`, { color: textPrimary }]}>
                     {item.label}
                   </Text>
                 </View>
@@ -106,7 +110,7 @@ export default function PieCharts({
                   <Text style={[tw`text-xs`, { color: textSecondary }]}>
                     {item.percentage}%
                   </Text>
-                  <Text style={[tw`text-sm font-semibold`, { color: textPrimary }]}>
+                  <Text weight='semibold' style={[tw`text-sm`, { color: textPrimary }]}>
                     ₦{item.value.toLocaleString()}
                   </Text>
                 </View>

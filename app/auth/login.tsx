@@ -5,17 +5,71 @@ import {
     KeyboardAvoidingView,
     Platform,
     ScrollView,
-    Text,
     TextInput,
     TouchableOpacity,
     View
 } from 'react-native';
+import {Text } from '@/components/AppText'
 import tailwind from "twrnc";
 import { ZodError } from "zod";
 import { loginSchema, registerSchema } from "../../schemas/authSchemas";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useThemeStore } from "../../store/useThemeStore";
 import { LoginUser, RegisterUser } from "../../types/user";
+
+interface PasswordInputProps {
+    value: string
+    onChange: (v: string) => void
+    placeholder: string
+    show: boolean
+    toggleShow: () => void
+    hasError: boolean
+    inputStyle: any
+    placeholderColor: string
+}
+
+function PasswordInput({
+    value,
+    onChange,
+    placeholder,
+    show,
+    toggleShow,
+    hasError,
+    inputStyle,
+    placeholderColor,
+}: PasswordInputProps) {
+    return (
+        <View style={{ position: 'relative' }}>
+            <TextInput
+                style={inputStyle}
+                placeholder={placeholder}
+                value={value}
+                placeholderTextColor={placeholderColor}
+                onChangeText={onChange}
+                secureTextEntry={!show}
+                textContentType="none"
+                autoCorrect={false}
+            />
+            <TouchableOpacity
+                onPress={toggleShow}
+                style={{
+                    position: 'absolute',
+                    right: 16,
+                    top: 0,
+                    bottom: 0,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <MaterialCommunityIcons
+                    name={show ? 'eye-off' : 'eye'}
+                    size={22}
+                    color={placeholderColor}
+                />
+            </TouchableOpacity>
+        </View>
+    )
+}
 
 const AuthScreen = () => {
     const [email, setEmail] = useState("")
@@ -39,6 +93,19 @@ const AuthScreen = () => {
     const placeholderColor = isDark ? '#4b5563' : '#aaaaaa'
 
     const clearErrors = () => setErrors({})
+
+    const inputStyle = (hasError: boolean): any => ({
+        paddingVertical: 16,
+        paddingLeft: 24,
+        paddingRight: 52,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: hasError ? '#f87171' : inputBorder,
+        backgroundColor: inputBg,
+        color: textPrimary,
+        fontSize: 16,
+        width: '100%',
+    })
 
     const handleSubmit = async () => {
         clearErrors()
@@ -77,66 +144,6 @@ const AuthScreen = () => {
         setEmail(''); setPassword(''); setConfirmPassword('')
     }
 
-    const inputStyle = (hasError: boolean): any => ({
-        paddingVertical: 16,
-        paddingLeft: 24,
-        paddingRight: 52, // room for the eye icon
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: hasError ? '#f87171' : inputBorder,
-        backgroundColor: inputBg,
-        color: textPrimary,
-        fontSize: 16,
-        width: '100%',
-    })
-
-    // Wraps input + absolutely positioned eye icon
-    const PasswordInput = ({
-        value,
-        onChange,
-        placeholder,
-        show,
-        toggleShow,
-        hasError,
-    }: {
-        value: string
-        onChange: (v: string) => void
-        placeholder: string
-        show: boolean
-        toggleShow: () => void
-        hasError: boolean
-    }) => (
-        <View style={{ position: 'relative' }}>
-            <TextInput
-                style={inputStyle(hasError)}
-                placeholder={placeholder}
-                value={value}
-                placeholderTextColor={placeholderColor}
-                onChangeText={(v) => { onChange(v); clearErrors() }}
-                secureTextEntry={!show}
-                textContentType="none"
-                autoCorrect={false}
-            />
-            <TouchableOpacity
-                onPress={toggleShow}
-                style={{
-                    position: 'absolute',
-                    right: 16,
-                    top: 0,
-                    bottom: 0,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
-                <MaterialCommunityIcons
-                    name={show ? 'eye-off' : 'eye'}
-                    size={22}
-                    color={placeholderColor}
-                />
-            </TouchableOpacity>
-        </View>
-    )
-
     return (
         <KeyboardAvoidingView
             style={[tailwind`flex-1`, { backgroundColor: bg }]}
@@ -146,7 +153,7 @@ const AuthScreen = () => {
                 contentContainerStyle={tailwind`flex-grow items-center justify-center p-4`}
                 keyboardShouldPersistTaps="handled"
             >
-                <Text style={[tailwind`text-4xl font-bold mb-6`, { color: textPrimary }]}>
+                <Text weight='bold' style={[tailwind`text-4xl mb-6`, { color: textPrimary }]}>
                     {isRegistering ? 'Sign Up' : 'Login'}
                 </Text>
 
@@ -193,11 +200,13 @@ const AuthScreen = () => {
                 <View style={tailwind`w-[80%] mb-4`}>
                     <PasswordInput
                         value={password}
-                        onChange={setPassword}
+                        onChange={(v) => { setPassword(v); clearErrors() }}
                         placeholder="Password"
                         show={showPassword}
                         toggleShow={() => setShowPassword(s => !s)}
                         hasError={!!errors.password}
+                        inputStyle={inputStyle(!!errors.password)}
+                        placeholderColor={placeholderColor}
                     />
                     {errors.password ? (
                         <Text style={tailwind`text-red-500 text-xs mt-1 ml-1`}>{errors.password}</Text>
@@ -209,11 +218,13 @@ const AuthScreen = () => {
                     <View style={tailwind`w-[80%] mb-4`}>
                         <PasswordInput
                             value={confirmPassword}
-                            onChange={setConfirmPassword}
+                            onChange={(v) => { setConfirmPassword(v); clearErrors() }}
                             placeholder="Confirm Password"
                             show={showConfirmPassword}
                             toggleShow={() => setShowConfirmPassword(s => !s)}
                             hasError={!!errors.confirmPassword}
+                            inputStyle={inputStyle(!!errors.confirmPassword)}
+                            placeholderColor={placeholderColor}
                         />
                         {errors.confirmPassword ? (
                             <Text style={tailwind`text-red-500 text-xs mt-1 ml-1`}>{errors.confirmPassword}</Text>
@@ -230,7 +241,7 @@ const AuthScreen = () => {
                     onPress={handleSubmit}
                     disabled={loading}
                 >
-                    <Text style={tailwind`text-white text-base font-bold text-center`}>
+                    <Text weight='bold' style={tailwind`text-white text-base text-center`}>
                         {loading
                             ? (isRegistering ? 'Creating account...' : 'Logging in...')
                             : isRegistering ? 'Sign Up' : 'Login'}

@@ -1,7 +1,10 @@
-import { View, Text, Pressable } from 'react-native'
+import { View, Pressable } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import TransactionInput from './TransactionInput'
+import { useThemeStore } from '../store/useThemeStore'
+
 
 interface ManualInputProps {
     title: string
@@ -21,6 +24,10 @@ export default function ManualInput({
     category, setCategory, type, setType,
     categoryPickerVisible, setCategoryPickerVisible
 }: ManualInputProps) {
+    
+    const { isDark } = useThemeStore()
+    const textSecondary = isDark ? '#9ca3af' : '#374151'
+
     return (
         <View style={tw`mb-6`}>
             <TransactionInput
@@ -35,10 +42,12 @@ export default function ManualInput({
                 value={amount}
                 onChangeText={setAmount}
                 keyboardType="numeric"
+                numericOnly
             />
 
             <Text
-                style={tw`text-sm font-medium mb-1 mt-2`}>
+                weight='semibold'
+                style={[tw`text-lg mb-1 mt-2`, { color: textSecondary }]}>
                 Category
             </Text>
             <Pressable

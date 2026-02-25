@@ -1,5 +1,6 @@
 import { ReactNode, useState, useEffect } from 'react'
-import { Modal, View, Text, Pressable, ScrollView } from 'react-native'
+import { Modal, View, Pressable, ScrollView } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../constants/categories'
@@ -39,7 +40,10 @@ export default function CategoryPicker({ visible, selected, onSelect, onClose, t
 
                     {/* Header */}
                     <View style={tw`flex-row justify-between items-center mb-3`}>
-                        <Text style={[tw`text-xl font-bold`, { color: textPrimary }]}>Select Category</Text>
+                        <Text 
+                            weight='bold' 
+                            style={[tw`text-xl`, 
+                            { color: isDark ? textPrimary : textSecondary }]}>Select Category</Text>
                         <Pressable onPress={onClose}>
                             <Ionicons name="close-circle-sharp" size={28} color={isDark ? '#ffffff' : '#000000'} />
                         </Pressable>
@@ -102,8 +106,9 @@ export default function CategoryPicker({ visible, selected, onSelect, onClose, t
 
                                         <Text
                                             numberOfLines={2}
+                                            weight='medium'
                                             style={[
-                                                tw`text-xs font-medium text-center`,
+                                                tw`text-xs text-center`,
                                                 { color: isSelected ? 'white' : isDark ? '#e5e7eb' : '#374151' }
                                             ]}
                                         >

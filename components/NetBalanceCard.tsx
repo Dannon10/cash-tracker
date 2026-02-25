@@ -1,4 +1,5 @@
-import { View, Text } from 'react-native'
+import { View} from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 
@@ -17,7 +18,7 @@ export default function NetBalanceCard({ netBalance }: Props) {
             </Text>
 
             <View style={tw`flex-row items-center justify-between`}>
-                <Text style={tw`text-white text-2xl font-bold`}>
+                <Text weight='bold' style={tw`text-white text-2xl`}>
                     {netBalance >= 0 ? '+' : '-'}₦
                     {Math.abs(netBalance).toLocaleString()}
                 </Text>

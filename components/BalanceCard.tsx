@@ -1,4 +1,5 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 import { useTransactionStore } from '../store/useTransactionStore'
 import { useThemeStore } from '../store/useThemeStore'
@@ -34,7 +35,7 @@ export default function BalanceCard() {
                 <View style={tw`flex-row justify-between mt-4`}> 
                     <View>
                         <Skeleton width={100} height={12} />
-                        <Skeleton width={90} height={16} style={{ marginTop: 8 }} />
+                        <Skeleton width={90} height={16} style={{ marginTop: 8} } />
                     </View>
                     <View style={tw`items-end`}>
                         <Skeleton width={110} height={12} />
@@ -50,21 +51,21 @@ export default function BalanceCard() {
             tw`rounded-3xl p-6 gap-2 shadow-md w-full h-[200px]`,
             { backgroundColor: cardBg, borderWidth: 1, borderColor: cardBorder }
         ]}>
-            <Text style={tw`text-gray-400 text-sm font-medium`}>Total Balance</Text>
-            <Text style={tw`text-white text-5xl font-bold mt-1`}>
+            <Text weight='medium' style={tw`text-gray-400 text-sm`}>Total Balance</Text>
+            <Text weight='bold' style={tw`text-white text-5xl mt-1`}>
                 ₦{balance.toLocaleString()}
             </Text>
 
             <View style={tw`flex-row justify-between mt-4`}>
                 <View>
                     <Text style={tw`text-gray-500 text-xs mb-0.5`}>Income</Text>
-                    <Text style={tw`text-emerald-400 text-sm font-semibold`}>
+                    <Text weight='semibold' style={tw`text-emerald-400 text-sm`}>
                         +₦{totalIncome.toLocaleString()}
                     </Text>
                 </View>
                 <View style={tw`items-end`}>
                     <Text style={tw`text-gray-500 text-xs mb-0.5`}>Spent so far</Text>
-                    <Text style={tw`text-rose-400 text-sm font-semibold`}>
+                    <Text weight='semibold' style={tw`text-rose-400 text-sm`}>
                         -₦{totalExpenses.toLocaleString()}
                     </Text>
                 </View>

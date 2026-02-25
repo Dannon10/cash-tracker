@@ -1,4 +1,5 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 import EvilIcons from '@expo/vector-icons/EvilIcons'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
@@ -26,7 +27,7 @@ export default function InsightsSection({
 
     return (
         <View style={tw`px-5 mt-5 gap-3`}>
-            <Text style={[tw`text-base font-bold`, { color: textPrimary }]}>
+            <Text weight='bold' style={[tw`text-base`, { color: textPrimary }]}>
                 Insights
             </Text>
 
@@ -34,10 +35,10 @@ export default function InsightsSection({
                 {dailyAvg > 0 && (
                     <View style={[tw`flex-1 rounded-2xl p-4`, { backgroundColor: cardBg }]}>
                         <EvilIcons name="calendar" size={40} color={textPrimary} />
-                        <Text style={[tw`text-xs mt-1`, { color: textSecondary }]}>
+                        <Text weight='medium' style={[tw`text-xs mt-1`, { color: textSecondary }]}>
                             Daily Avg Spend
                         </Text>
-                        <Text style={[tw`text-base font-bold`, { color: textPrimary }]}>
+                        <Text weight='bold' style={[tw`text-base`, { color: textPrimary }]}>
                             ₦{dailyAvg.toLocaleString()}
                         </Text>
                     </View>
@@ -52,7 +53,8 @@ export default function InsightsSection({
                             vs Last Month
                         </Text>
                         <Text
-                            style={tw`text-base font-bold ${vsLastMonth > 0 ? 'text-rose-500' : 'text-emerald-500'
+                            weight='bold'
+                            style={tw`text-base ${vsLastMonth > 0 ? 'text-rose-500' : 'text-emerald-500'
                                 }`}>
                             {vsLastMonth > 0 ? '+' : ''}
                             {vsLastMonth}%
@@ -74,7 +76,7 @@ export default function InsightsSection({
                             <Text style={[tw`text-xs`, { color: textSecondary }]}>
                                 Biggest Expense
                             </Text>
-                            <Text style={[tw`text-sm font-semibold`, { color: textPrimary }]}>
+                            <Text weight='semibold' style={[tw`text-sm`, { color: textPrimary }]}>
                                 {biggestExpense.title}
                             </Text>
                             <Text style={[tw`text-xs`, { color: textSecondary }]}>
@@ -83,7 +85,7 @@ export default function InsightsSection({
                         </View>
                     </View>
 
-                    <Text style={tw`text-base font-bold text-rose-500`}>
+                    <Text weight='bold' style={tw`text-base text-rose-500`}>
                         ₦{Math.abs(biggestExpense.amount).toLocaleString()}
                     </Text>
                 </View>

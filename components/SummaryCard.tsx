@@ -1,4 +1,5 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 
 interface Props {
@@ -13,7 +14,7 @@ export default function SummaryCards({ totalIncome, totalExpenses }: Props) {
                 <Text style={tw`text-emerald-100 text-xs mb-1`}>
                     Total Income
                 </Text>
-                <Text style={tw`text-white text-xl font-bold`}>
+                <Text weight='bold' style={tw`text-white text-xl`}>
                     ₦{totalIncome.toLocaleString()}
                 </Text>
             </View>
@@ -22,7 +23,7 @@ export default function SummaryCards({ totalIncome, totalExpenses }: Props) {
                 <Text style={tw`text-rose-100 text-xs mb-1`}>
                     Total Expenses
                 </Text>
-                <Text style={tw`text-white text-xl font-bold`}>
+                <Text weight='bold' style={tw`text-white text-xl`}>
                     ₦{totalExpenses.toLocaleString()}
                 </Text>
             </View>

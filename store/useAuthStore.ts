@@ -19,14 +19,15 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     initialize: async () => {
         const { data: { session } } = await supabase.auth.getSession()
+
         set({
             user: session?.user ?? null,
             session: session ?? null,
-            loading: false,
+            loading: false, 
         })
 
-        // Listen for auth changes (token refresh, sign out, etc.)
-        supabase.auth.onAuthStateChange((_event, session) => {
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'INITIAL_SESSION') return
             set({
                 user: session?.user ?? null,
                 session: session ?? null,
@@ -41,18 +42,18 @@ export const useAuthStore = create<AuthState>((set) => ({
         return null
     },
 
-signUp: async (email, password, name) => {
-    const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-            data: { full_name: name }  // stored in user_metadata
-        }
-    })
-    if (error) return error.message
-    set({ user: data.user, session: data.session ?? null })
-    return null
-},
+    signUp: async (email, password, name) => {
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: { full_name: name }
+            }
+        })
+        if (error) return error.message
+        set({ user: data.user, session: data.session ?? null })
+        return null
+    },
 
     signOut: async () => {
         await supabase.auth.signOut()

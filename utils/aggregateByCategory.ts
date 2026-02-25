@@ -1,4 +1,3 @@
-// utils/aggregateByCategory.ts
 import { Transaction } from '@/types/transactions'
 
 export function aggregateByCategory(transactions: Transaction[]) {
@@ -8,7 +7,7 @@ export function aggregateByCategory(transactions: Transaction[]) {
         if (!result[tx.category]) {
             result[tx.category] = 0
         }
-        result[tx.category] += Math.abs(tx.amount) // use absolute value for chart
+        result[tx.category] += Math.abs(tx.amount) 
     })
 
     const total = Object.values(result).reduce((a, b) => a + b, 0)

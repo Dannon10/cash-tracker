@@ -1,7 +1,8 @@
 import Ionicons from '@expo/vector-icons/Ionicons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { useState, useEffect } from 'react'
-import { Modal, Pressable, Text, View, ActivityIndicator } from 'react-native'
+import { Modal, Pressable, View, ActivityIndicator } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 import { useTransactionStore } from '../store/useTransactionStore'
 import { useThemeStore } from '../store/useThemeStore'
@@ -63,7 +64,7 @@ export default function EditTransactionModal({ visible, transaction, onClose }: 
                         {/* Header */}
                         <View style={tw`flex-row justify-between items-start mb-6`}>
                             <View>
-                                <Text style={[tw`text-3xl font-bold mb-2`, { color: textPrimary }]}>
+                                <Text weight='bold' style={[tw`text-3xl mb-2`, { color: textPrimary }]}>
                                     Edit Transaction
                                 </Text>
                                 <Text style={[tw`text-base`, { color: textSecondary }]}>
@@ -91,7 +92,7 @@ export default function EditTransactionModal({ visible, transaction, onClose }: 
                         />
 
                         {/* Category */}
-                        <Text style={[tw`text-sm font-medium mb-1 mt-2`, { color: textSecondary }]}>Category</Text>
+                        <Text weight='medium' style={[tw`text-sm mb-1 mt-2`, { color: textSecondary }]}>Category</Text>
                         <Pressable
                             onPress={() => setCategoryPickerVisible(true)}
                             style={[
@@ -111,13 +112,13 @@ export default function EditTransactionModal({ visible, transaction, onClose }: 
                                 onPress={() => setType('income')}
                                 style={tw`${type === 'income' ? 'bg-green-500' : 'bg-gray-200'} px-6 py-2 rounded-full`}
                             >
-                                <Text style={tw`${type === 'income' ? 'text-white' : 'text-black'} font-medium`}>Income</Text>
+                                <Text weight='medium' style={tw`${type === 'income' ? 'text-white' : 'text-black'}`}>Income</Text>
                             </Pressable>
                             <Pressable
                                 onPress={() => setType('expense')}
                                 style={tw`${type === 'expense' ? 'bg-red-500' : 'bg-gray-200'} px-6 py-2 rounded-full`}
                             >
-                                <Text style={tw`${type === 'expense' ? 'text-white' : 'text-black'} font-medium`}>Expense</Text>
+                                <Text weight='medium' style={tw`${type === 'expense' ? 'text-white' : 'text-black'}`}>Expense</Text>
                             </Pressable>
                         </View>
 
@@ -131,7 +132,7 @@ export default function EditTransactionModal({ visible, transaction, onClose }: 
                             ]}
                         >
                             {saving && <ActivityIndicator size="small" color="white" />}
-                            <Text style={tw`text-white text-xl font-semibold`}>
+                            <Text weight='semibold' style={tw`text-white text-xl`}>
                                 {saving ? 'Saving...' : 'Save Changes'}
                             </Text>
                         </Pressable>

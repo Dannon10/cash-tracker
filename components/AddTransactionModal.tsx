@@ -2,18 +2,16 @@ import { useState, useRef, useEffect } from 'react'
 import {
     Modal,
     View,
-    Text,
     Pressable,
     Animated,
     Easing,
     Dimensions,
     PanResponder,
 } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-
 import { useTransactionStore } from '../store/useTransactionStore'
 import { useThemeStore } from '../store/useThemeStore'
 import ManualInput from './ManualInput'
@@ -115,7 +113,6 @@ export default function AddTransactionModal({
                     }).start()
                 }
             },
-
             onPanResponderTerminationRequest: () => false,
         })
     ).current
@@ -158,7 +155,6 @@ export default function AddTransactionModal({
 
             {/* MODAL CONTENT */}
             <Animated.View
-                // {...panResponder.panHandlers}
                 style={[
                     tw`absolute left-0 right-0 bottom-0 p-5 rounded-t-3xl`,
                     {
@@ -174,11 +170,10 @@ export default function AddTransactionModal({
                 </View>
 
                 {/* HEADER */}
-                    <Text
-                        style={[tw`text-3xl font-bold text-center mb-6 mt-4`, { color: textPrimary }]}>
+                    <Text weight='bold'
+                        style={[tw`text-3xl text-center mb-6 mt-4`, { color: textPrimary }]}>
                         Add New Transaction
                     </Text>
-                {/* </View> */}
 
                 {/* MODE TOGGLE */}
                 <View style={tw`flex-row justify-around mb-8`}>
@@ -197,8 +192,9 @@ export default function AddTransactionModal({
                         ]}
                     >
                         <Text
+                        weight='medium'
                             style={[
-                                tw`text-lg font-semibold`,
+                                tw`text-lg`,
                                 { color: textPrimary },
                             ]}>
                             Manual
@@ -220,8 +216,10 @@ export default function AddTransactionModal({
                                 : {},
                         ]}
                     >
-                        <Text style={[
-                            tw`text-lg font-semibold`,
+                        <Text
+                            weight='medium'
+                            style={[
+                            tw`text-lg`,
                             { color: textPrimary },
                         ]}>
                             Voice
@@ -260,7 +258,7 @@ export default function AddTransactionModal({
                         { backgroundColor: '#0B0B0B' },
                     ]}
                 >
-                    <Text style={tw`text-white text-xl font-semibold`}>Add Transaction</Text>
+                    <Text weight='semibold' style={tw`text-white text-xl`}>Add Transaction</Text>
                 </Pressable>
             </Animated.View>
 

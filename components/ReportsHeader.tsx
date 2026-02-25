@@ -1,4 +1,5 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 
 interface Props {
@@ -21,7 +22,7 @@ export default function ReportsHeader({
                 { backgroundColor: cardBg, borderBottomWidth: 1, borderBottomColor: dividerColor },
             ]}
         >
-            <Text style={[tw`text-2xl font-bold`, { color: textPrimary }]}>
+            <Text weight='bold' style={[tw`text-2xl`, { color: textPrimary }]}>
                 Reports
             </Text>
             <Text style={[tw`text-sm mt-1`, { color: textSecondary }]}>

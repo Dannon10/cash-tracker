@@ -1,4 +1,5 @@
-import { View, Text, Dimensions } from 'react-native'
+import { View, Dimensions } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 import { BarChart } from 'react-native-gifted-charts'
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'
@@ -28,7 +29,7 @@ export default function MonthlyTrend({
         <View style={[tw`mx-5 mt-5 rounded-3xl p-6`, { backgroundColor: cardBg }]}>
             <View style={tw`flex-row items-center gap-2 mb-1`}>
                 <SimpleLineIcons name="chart" size={20} color={textPrimary} />
-                <Text style={[tw`text-lg font-bold`, { color: textPrimary }]}>
+                <Text weight='bold' style={[tw`text-lg`, { color: textPrimary }]}>
                     Monthly Trend
                 </Text>
             </View>

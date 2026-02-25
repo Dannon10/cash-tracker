@@ -1,10 +1,11 @@
 import BalanceCard from '@/components/BalanceCard'
 import TransactionsList from '@/components/TransactionsList'
 import MonthFilterPicker from '@/components/MonthFilterPicker'
-import { View, Text, ScrollView, RefreshControl } from 'react-native'
+import { View, ScrollView, RefreshControl } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 import { useTransactionStore } from '../../store/useTransactionStore'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useAuthStore } from '../../store/useAuthStore'
 import { useThemeStore } from '../../store/useThemeStore'
 
@@ -19,13 +20,16 @@ export default function TransactionsScreen() {
     const fullName = user?.user_metadata?.full_name || ''
     const displayName = fullName.trim().split(' ')[0] || ''
 
+    useEffect(() => {
+        if (user) fetchTransactions()
+    }, [user])
+
     const onRefresh = async () => {
         setRefreshing(true)
         await fetchTransactions()
         setRefreshing(false)
     }
 
-    // Months that have at least one transaction
     const activeMonths = useMemo(() => {
         const monthSet = new Set<number>()
         transactions.forEach((tx) => {
@@ -34,7 +38,6 @@ export default function TransactionsScreen() {
         return monthSet
     }, [transactions])
 
-    // Filtered list
     const filteredTransactions = useMemo(() => {
         if (selectedMonth === null) return transactions
         return transactions.filter((tx) => new Date(tx.date).getMonth() === selectedMonth)
@@ -54,7 +57,7 @@ export default function TransactionsScreen() {
                     />
                 }
             >
-                <Text style={tw`text-3xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>
+                <Text weight='bold' style={tw`text-3xl ${isDark ? 'text-white' : 'text-black'}`}>
                     Hello 👋, {displayName}
                 </Text>
 
@@ -64,7 +67,6 @@ export default function TransactionsScreen() {
 
                 <BalanceCard />
 
-                {/* Month filter — single pill with dropdown */}
                 <MonthFilterPicker
                     selectedMonth={selectedMonth}
                     activeMonths={activeMonths}

@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
-import { View, Text, Pressable, Alert } from 'react-native'
+import { View, Pressable, Alert } from 'react-native'
+import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 import { Audio } from 'expo-av'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
@@ -260,7 +261,7 @@ Return ONLY the JSON object, no extra text`,
 
             {parsedVoice && (
                 <View style={tw`mt-6 w-full rounded-xl p-4 bg-gray-100`}>
-                    <Text style={tw`text-base font-semibold mb-2`}>Detected Transaction:</Text>
+                    <Text weight='semibold' style={tw`text-base mb-2`}>Detected Transaction:</Text>
                     <Text>Title: {parsedVoice.title}</Text>
                     <Text>Amount: ₦{parsedVoice.amount?.toLocaleString()}</Text>
                     <Text>Type: {parsedVoice.type}</Text>

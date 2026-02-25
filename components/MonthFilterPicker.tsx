@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Modal, Pressable, Text, View, ScrollView } from 'react-native'
+import { Modal, Pressable, View, ScrollView } from 'react-native'
+import { Text } from '@/components/AppText'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import tw from 'twrnc'
@@ -49,7 +50,7 @@ export default function MonthFilterPicker({
                     { backgroundColor: pillBg }
                 ]}
             >
-                <Text style={[tw`text-sm font-semibold`, { color: pillText }]}>{label}</Text>
+                <Text weight='semibold' style={[tw`text-sm`, { color: pillText }]}>{label}</Text>
                 <MaterialCommunityIcons name="chevron-down" size={16} color={pillText} />
             </Pressable>
 
@@ -59,7 +60,7 @@ export default function MonthFilterPicker({
                     <View style={[tw`rounded-t-3xl p-5`, { backgroundColor: modalBg }]}>
 
                         <View style={tw`flex-row justify-between items-center mb-4`}>
-                            <Text style={[tw`text-lg font-bold`, { color: textPrimary }]}>Filter by Month</Text>
+                            <Text weight='bold' style={[tw`text-lg`, { color: textPrimary }]}>Filter by Month</Text>
                             <Pressable onPress={() => setOpen(false)}>
                                 <Ionicons name="close-circle-sharp" size={26} color={textPrimary} />
                             </Pressable>
@@ -100,7 +101,7 @@ export default function MonthFilterPicker({
                             onPress={() => setOpen(false)}
                             style={tw`py-4 items-center`}
                         >
-                            <Text style={[tw`text-base font-semibold`, { color: textSecondary }]}>Cancel</Text>
+                            <Text weight='semibold' style={[tw`text-base`, { color: textSecondary }]}>Cancel</Text>
                         </Pressable>
 
                     </View>
