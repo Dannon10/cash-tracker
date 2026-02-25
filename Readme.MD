@@ -7,7 +7,7 @@ A modern, AI-powered personal finance app built with React Native and Expo. Trac
 ## Demo
 
 <!-- Add your screen recording below -->
-> 🎥 **[Watch Demo Video](./demo.mp4)**  
+> 🎥 **[Watch Demo Video](https://github.com/user-attachments/assets/36a4eba6-4718-4d85-8fe6-5c970f9ad0ea)**  
 > *(Replace this with your actual video link or embed once uploaded)*
 
 ---
