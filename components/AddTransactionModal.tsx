@@ -47,6 +47,7 @@ export default function AddTransactionModal({
         setCategory('')
         setType('expense')
         setParsedVoice(null)
+        setMode('manual')
     }
 
     const screenHeight = Dimensions.get('window').height
@@ -86,6 +87,7 @@ export default function AddTransactionModal({
             }),
         ]).start(() => {
             onClose()
+            resetForm()
         })
     }
     
@@ -247,7 +249,11 @@ export default function AddTransactionModal({
                 )}
 
                 {mode === 'voice' && (
-                    <VoiceInput parsedVoice={parsedVoice} setParsedVoice={setParsedVoice} />
+                    <VoiceInput 
+                        parsedVoice={parsedVoice} 
+                        setParsedVoice={setParsedVoice}
+                        // active={mode === 'voice'}
+                        />
                 )}
 
                 {/* SUBMIT */}
