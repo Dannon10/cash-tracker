@@ -1,7 +1,7 @@
 import BalanceCard from '@/components/BalanceCard'
 import TransactionsList from '@/components/TransactionsList'
 import MonthFilterPicker from '@/components/MonthFilterPicker'
-import { View, ScrollView, RefreshControl } from 'react-native'
+import { View, ScrollView, RefreshControl, Platform } from 'react-native'
 import { Text } from '@/components/AppText'
 import tw from 'twrnc'
 import { useTransactionStore } from '../../store/useTransactionStore'
@@ -44,9 +44,15 @@ export default function TransactionsScreen() {
     }, [transactions, selectedMonth])
 
     return (
-        <View style={tw`flex-1 ${isDark ? 'bg-[#0f0f0f]' : 'bg-white'}`}>
+        <View style={[tw`flex-1 ${isDark ? 'bg-[#0f0f0f]' : 'bg-white'}`, { flex: 1 }]}>
             <ScrollView
-                contentContainerStyle={tw`py-10 px-5`}
+                style={{ flex: 1 }}
+                nestedScrollEnabled={true}
+                contentContainerStyle={[
+                    tw`py-10 px-5 pb-32`,
+                    // @ts-ignore
+                    Platform.OS === 'web' && { minHeight: '100%' }
+                ]}
                 showsVerticalScrollIndicator={false}
                 refreshControl={
                     <RefreshControl
