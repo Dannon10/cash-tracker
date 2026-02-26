@@ -85,6 +85,8 @@ export default function Index() {
     const [width, setWidth] = useState(390)
     const [height, setHeight] = useState(844)
     const [mounted, setMounted] = useState(false)
+    const scrollX = useRef(new Animated.Value(0)).current
+    const flatListRef = useRef<any>(null)
 
     useEffect(() => {
         const { width: w, height: h } = Dimensions.get('window')
@@ -114,13 +116,13 @@ export default function Index() {
 
     const goToNext = () => {
         if (currentIndex < SLIDES.length - 1) {
-            setCurrentIndex(currentIndex + 1)
+            const next = currentIndex + 1
+            flatListRef.current?.scrollToIndex({ index: next, animated: true })
+            setCurrentIndex(next)
         } else {
             completeOnboarding(router)
         }
     }
-
-    const slide = SLIDES[currentIndex]
 
     return (
         <View style={[tw`flex-1 bg-[#0B0B0B]`, { width: '100%' }]}>
@@ -137,78 +139,107 @@ export default function Index() {
                 </TouchableOpacity>
             </View>
 
-            {/* Slide */}
-            <View style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingHorizontal: 32,
-                paddingVertical: 16,
-            }}>
-                {mounted && (
-                    <>
-                        {slide.type === 'text' ? (
-                            <View style={{ alignItems: 'center', marginBottom: gapSm }}>
-                                <Text weight="bold" style={tw`text-4xl text-white mb-2 text-center`}>
-                                    Cash Tracker
-                                </Text>
-                                <Text style={{ fontSize: emojiSize, textAlign: 'center' }}>
-                                    {slide.emoji}
-                                </Text>
-                            </View>
-                        ) : (
-                            <View style={{ marginBottom: gapSm, alignItems: 'center' }}>
-                                <View style={[tw`rounded-3xl overflow-hidden`, {
-                                    width: phoneFrameWidth,
-                                    height: phoneFrameHeight,
-                                    backgroundColor: '#1a1a1a',
-                                    borderWidth: 3,
-                                    borderColor: '#333',
-                                    shadowColor: '#000',
-                                    shadowOffset: { width: 0, height: 16 },
-                                    shadowOpacity: 0.5,
-                                    shadowRadius: 24,
-                                    elevation: 16,
-                                }]}>
-                                    <View style={tw`items-center pt-2 pb-1`}>
-                                        <View style={[tw`rounded-full`, { width: 52, height: 5, backgroundColor: '#333' }]} />
-                                    </View>
-                                    <View style={tw`flex-1 overflow-hidden`}>
-                                        <FadingImage images={slide.images!} />
-                                    </View>
+            {/* Slides — only render after mounted so dimensions are correct */}
+            {mounted && (
+                <Animated.FlatList
+                    ref={flatListRef}
+                    data={SLIDES}
+                    horizontal
+                    pagingEnabled
+                    scrollEnabled
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(_, i) => String(i)}
+                    style={{ width, height: SLIDE_H }}
+                    getItemLayout={(_, index) => ({
+                        length: width,
+                        offset: width * index,
+                        index,
+                    })}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                        { useNativeDriver: false }
+                    )}
+                    onMomentumScrollEnd={(e) => {
+                        const index = Math.round(e.nativeEvent.contentOffset.x / width)
+                        setCurrentIndex(index)
+                    }}
+                    renderItem={({ item, index }: { item: any; index: number }) => (
+                        <View style={{
+                            width,
+                            height: SLIDE_H,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            paddingHorizontal: 32,
+                        }}>
+                            {/* Visual */}
+                            {item.type === 'text' ? (
+                                <View style={{ alignItems: 'center', marginBottom: gapSm }}>
+                                    <Text weight="bold" style={tw`text-4xl text-white mb-2 text-center`}>
+                                        Cash Tracker
+                                    </Text>
+                                    <Text style={{ fontSize: emojiSize, textAlign: 'center' }}>
+                                        {item.emoji}
+                                    </Text>
                                 </View>
-                                {slide.frameLabel && (
-                                    <View style={tw`flex-row items-center gap-2 mt-2`}>
-                                        <View style={[tw`w-1.5 h-1.5 rounded-full`, { backgroundColor: '#ffffff30' }]} />
-                                        <Text style={tw`text-xs text-gray-500`}>{slide.frameLabel}</Text>
-                                        <View style={[tw`w-1.5 h-1.5 rounded-full`, { backgroundColor: '#ffffff30' }]} />
+                            ) : (
+                                <View style={{ marginBottom: gapSm, alignItems: 'center' }}>
+                                    <View style={[tw`rounded-3xl overflow-hidden`, {
+                                        width: phoneFrameWidth,
+                                        height: phoneFrameHeight,
+                                        backgroundColor: '#1a1a1a',
+                                        borderWidth: 3,
+                                        borderColor: '#333',
+                                        shadowColor: '#000',
+                                        shadowOffset: { width: 0, height: 16 },
+                                        shadowOpacity: 0.5,
+                                        shadowRadius: 24,
+                                        elevation: 16,
+                                    }]}>
+                                        <View style={tw`items-center pt-2 pb-1`}>
+                                            <View style={[tw`rounded-full`, { width: 52, height: 5, backgroundColor: '#333' }]} />
+                                        </View>
+                                        <View style={tw`flex-1 overflow-hidden`}>
+                                            <FadingImage images={item.images} />
+                                        </View>
                                     </View>
+                                    {item.frameLabel && (
+                                        <View style={tw`flex-row items-center gap-2 mt-2`}>
+                                            <View style={[tw`w-1.5 h-1.5 rounded-full`, { backgroundColor: '#ffffff30' }]} />
+                                            <Text style={tw`text-xs text-gray-500`}>{item.frameLabel}</Text>
+                                            <View style={[tw`w-1.5 h-1.5 rounded-full`, { backgroundColor: '#ffffff30' }]} />
+                                        </View>
+                                    )}
+                                </View>
+                            )}
+
+                            {/* Headline */}
+                            <View style={{ alignItems: 'center', marginBottom: gapSm }}>
+                                {item.typewriter && index === currentIndex ? (
+                                    <TypewriterText text={item.headline} size={headlineSize} />
+                                ) : (
+                                    <Text weight="bold" style={{ fontSize: headlineSize, color: '#fff', textAlign: 'center' }}>
+                                        {item.headline}
+                                    </Text>
                                 )}
                             </View>
-                        )}
 
-                        <View style={{ alignItems: 'center', marginBottom: gapSm }}>
-                            {slide.typewriter ? (
-                                <TypewriterText text={slide.headline} size={headlineSize} />
-                            ) : (
-                                <Text weight="bold" style={{ fontSize: headlineSize, color: '#fff', textAlign: 'center' }}>
-                                    {slide.headline}
-                                </Text>
-                            )}
+                            {/* Subtitle */}
+                            <Text style={{
+                                fontSize: subtitleSize,
+                                color: '#9ca3af',
+                                textAlign: 'center',
+                                lineHeight: subtitleSize * 1.65,
+                                paddingHorizontal: 4,
+                            }}>
+                                {item.subtitle}
+                            </Text>
                         </View>
+                    )}
+                />
+            )}
 
-                        <Text style={{
-                            fontSize: subtitleSize,
-                            color: '#9ca3af',
-                            textAlign: 'center',
-                            lineHeight: subtitleSize * 1.65,
-                            paddingHorizontal: 4,
-                        }}>
-                            {slide.subtitle}
-                        </Text>
-                    </>
-                )}
-            </View>
+            {/* Placeholder while not mounted so layout doesn't jump */}
+            {!mounted && <View style={{ height: SLIDE_H }} />}
 
             {/* Bottom */}
             <View style={{
@@ -219,14 +250,17 @@ export default function Index() {
             }}>
                 {/* Dots */}
                 <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
-                    {SLIDES.map((_, i) => (
-                        <TouchableOpacity key={i} onPress={() => setCurrentIndex(i)} style={{ padding: 4 }}>
-                            <View style={[tw`h-2 rounded-full bg-white`, {
-                                width: i === currentIndex ? 24 : 8,
-                                opacity: i === currentIndex ? 1 : 0.3,
-                            }]} />
-                        </TouchableOpacity>
-                    ))}
+                    {SLIDES.map((_, i) => {
+                        const inputRange = [(i - 1) * width, i * width, (i + 1) * width]
+                        const dotWidth = scrollX.interpolate({ inputRange, outputRange: [8, 24, 8], extrapolate: 'clamp' })
+                        const dotOpacity = scrollX.interpolate({ inputRange, outputRange: [0.3, 1, 0.3], extrapolate: 'clamp' })
+                        return (
+                            <Animated.View
+                                key={i}
+                                style={[tw`h-2 rounded-full bg-white`, { width: dotWidth, opacity: dotOpacity }]}
+                            />
+                        )
+                    })}
                 </View>
 
                 <TouchableOpacity
