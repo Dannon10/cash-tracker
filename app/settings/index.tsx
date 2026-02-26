@@ -14,6 +14,7 @@ export default function SettingsScreen() {
     const { isDark, toggleTheme } = useThemeStore();
     const router = useRouter();
 
+
     const fullName = user?.user_metadata?.full_name || ''
     const displayName = fullName.trim().split(' ')[0] || 'User';
 
@@ -43,6 +44,7 @@ export default function SettingsScreen() {
     const textPrimary = isDark ? 'text-white' : 'text-gray-900'
     const textSecondary = isDark ? 'text-gray-400' : 'text-gray-500'
     const borderColor = isDark ? '#2a2a2a' : '#f3f4f6'
+
 
     return (
         <View style={tw`flex-1 ${bg}`}>

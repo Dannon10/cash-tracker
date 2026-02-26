@@ -5,23 +5,6 @@ import { Text } from '@/components/AppText'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import tw from "twrnc";
 
-const { width, height } = Dimensions.get("window")
-
-const STATUSBAR_H = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 24) : 44
-const SKIP_H = STATUSBAR_H + 48
-const BOTTOM_H = 130
-const SLIDE_H = height - SKIP_H - BOTTOM_H
-
-const isSmall = height < 700
-const isMedium = height < 850
-
-const phoneFrameWidth = isSmall ? width * 0.5 : isMedium ? width * 0.56 : width * 0.62
-const phoneFrameHeight = phoneFrameWidth * 1.85
-const emojiSize = isSmall ? 52 : isMedium ? 68 : 84
-const headlineSize = isSmall ? 18 : isMedium ? 22 : 26
-const subtitleSize = isSmall ? 11 : 13
-const gapSm = isSmall ? 8 : 16
-
 async function completeOnboarding(router: any) {
     await AsyncStorage.setItem('hasSeenOnboarding', 'true')
     router.replace('/auth/login')
@@ -40,10 +23,7 @@ function TypewriterText({ text, size }: { text: string; size: number }) {
         return () => clearInterval(interval)
     }, [text])
     return (
-        <Text
-            weight="bold"
-            style={{ fontSize: size, color: '#fff', textAlign: 'center' }}
-        >
+        <Text weight="bold" style={{ fontSize: size, color: '#fff', textAlign: 'center' }}>
             {displayed}
         </Text>
     )
@@ -65,42 +45,8 @@ function FadingImage({ images }: { images: any[] }) {
     return (
         <Animated.Image
             source={images[currentIndex]}
-            style={[tw`w-full h-full rounded-2xl`, 
-                { resizeMode: 'cover', opacity }]}
+            style={[tw`w-full h-full rounded-2xl`, { resizeMode: 'cover', opacity }]}
         />
-    )
-}
-
-function PhoneFrame({ images, label }: { images: any[]; label?: string }) {
-    return (
-        <View style={tw`items-center`}>
-            <View style={[tw`rounded-3xl overflow-hidden`, {
-                width: phoneFrameWidth,
-                height: phoneFrameHeight,
-                backgroundColor: '#1a1a1a',
-                borderWidth: 3,
-                borderColor: '#333',
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 16 },
-                shadowOpacity: 0.5,
-                shadowRadius: 24,
-                elevation: 16,
-            }]}>
-                <View style={tw`items-center pt-2 pb-1`}>
-                    <View style={[tw`rounded-full`, { width: 52, height: 5, backgroundColor: '#333' }]} />
-                </View>
-                <View style={tw`flex-1 overflow-hidden`}>
-                    <FadingImage images={images} />
-                </View>
-            </View>
-            {label && (
-                <View style={tw`flex-row items-center gap-2 mt-2`}>
-                    <View style={[tw`w-1.5 h-1.5 rounded-full`, { backgroundColor: '#ffffff30' }]} />
-                    <Text style={tw`text-xs text-gray-500`}>{label}</Text>
-                    <View style={[tw`w-1.5 h-1.5 rounded-full`, { backgroundColor: '#ffffff30' }]} />
-                </View>
-            )}
-        </View>
     )
 }
 
@@ -136,124 +82,162 @@ const SLIDES = [
 export default function Index() {
     const router = useRouter()
     const [currentIndex, setCurrentIndex] = useState(0)
-    const scrollX = useRef(new Animated.Value(0)).current
-    const flatListRef = useRef<any>(null)
+    const [width, setWidth] = useState(390)
+    const [height, setHeight] = useState(844)
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        const { width: w, height: h } = Dimensions.get('window')
+        setWidth(w)
+        setHeight(h)
+        setMounted(true)
+        const sub = Dimensions.addEventListener('change', ({ window }) => {
+            setWidth(window.width)
+            setHeight(window.height)
+        })
+        return () => sub.remove()
+    }, [])
+
+    const STATUSBAR_H = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 24) : 44
+    const SKIP_H = STATUSBAR_H + 48
+    const BOTTOM_H = 130
+    const SLIDE_H = Math.max(height - SKIP_H - BOTTOM_H, 300)
+
+    const isSmall = height < 700
+    const isMedium = height < 850
+    const phoneFrameWidth = isSmall ? width * 0.5 : isMedium ? width * 0.56 : width * 0.62
+    const phoneFrameHeight = phoneFrameWidth * 1.85
+    const emojiSize = isSmall ? 52 : isMedium ? 68 : 84
+    const headlineSize = isSmall ? 18 : isMedium ? 22 : 26
+    const subtitleSize = isSmall ? 11 : 13
+    const gapSm = isSmall ? 8 : 16
 
     const goToNext = () => {
         if (currentIndex < SLIDES.length - 1) {
-            const next = currentIndex + 1
-            flatListRef.current?.scrollToIndex({ index: next, animated: true })
-            setCurrentIndex(next)
+            setCurrentIndex(currentIndex + 1)
         } else {
             completeOnboarding(router)
         }
     }
 
+    const slide = SLIDES[currentIndex]
+
     return (
-        <View style={tw`flex-1 bg-[#0B0B0B]`}>
+        <View style={[tw`flex-1 bg-[#0B0B0B]`, { width: '100%' }]}>
 
             {/* Skip */}
-            <View style={[tw`items-end justify-end px-8 pb-2`, { height: SKIP_H }]}>
+            <View style={{
+                alignItems: 'flex-end',
+                paddingHorizontal: 32,
+                paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 24) + 16 : 56,
+                paddingBottom: 8,
+            }}>
                 <TouchableOpacity onPress={() => completeOnboarding(router)} style={tw`px-4 py-2`}>
                     <Text style={tw`text-gray-400 text-base`}>Skip</Text>
                 </TouchableOpacity>
             </View>
 
-            {/* Slides */}
-            <Animated.FlatList
-                ref={flatListRef}
-                data={SLIDES}
-                horizontal
-                pagingEnabled
-                scrollEnabled
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(_, i) => String(i)}
-                style={{ width, height: SLIDE_H }}
-                getItemLayout={(_, index) => ({
-                    length: width,
-                    offset: width * index,
-                    index,
-                })}
-                onScroll={Animated.event(
-                    [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                    { useNativeDriver: false }
-                )}
-                onMomentumScrollEnd={(e) => {
-                    const index = Math.round(e.nativeEvent.contentOffset.x / width)
-                    setCurrentIndex(index)
-                }}
-                renderItem={({ item, index }: { item: any; index: number }) => (
-                    <View style={{
-                        width,
-                        height: SLIDE_H,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        paddingHorizontal: 32,
-                    }}>
-                        {/* Visual */}
-                        {item.type === 'text' ? (
+            {/* Slide */}
+            <View style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingHorizontal: 32,
+                paddingVertical: 16,
+            }}>
+                {mounted && (
+                    <>
+                        {slide.type === 'text' ? (
                             <View style={{ alignItems: 'center', marginBottom: gapSm }}>
                                 <Text weight="bold" style={tw`text-4xl text-white mb-2 text-center`}>
                                     Cash Tracker
                                 </Text>
-                                <Text style={{ fontSize: emojiSize }}>{item.emoji}</Text>
+                                <Text style={{ fontSize: emojiSize, textAlign: 'center' }}>
+                                    {slide.emoji}
+                                </Text>
                             </View>
                         ) : (
-                            <View style={{ marginBottom: gapSm }}>
-                                <PhoneFrame images={item.images} label={item.frameLabel} />
+                            <View style={{ marginBottom: gapSm, alignItems: 'center' }}>
+                                <View style={[tw`rounded-3xl overflow-hidden`, {
+                                    width: phoneFrameWidth,
+                                    height: phoneFrameHeight,
+                                    backgroundColor: '#1a1a1a',
+                                    borderWidth: 3,
+                                    borderColor: '#333',
+                                    shadowColor: '#000',
+                                    shadowOffset: { width: 0, height: 16 },
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 24,
+                                    elevation: 16,
+                                }]}>
+                                    <View style={tw`items-center pt-2 pb-1`}>
+                                        <View style={[tw`rounded-full`, { width: 52, height: 5, backgroundColor: '#333' }]} />
+                                    </View>
+                                    <View style={tw`flex-1 overflow-hidden`}>
+                                        <FadingImage images={slide.images!} />
+                                    </View>
+                                </View>
+                                {slide.frameLabel && (
+                                    <View style={tw`flex-row items-center gap-2 mt-2`}>
+                                        <View style={[tw`w-1.5 h-1.5 rounded-full`, { backgroundColor: '#ffffff30' }]} />
+                                        <Text style={tw`text-xs text-gray-500`}>{slide.frameLabel}</Text>
+                                        <View style={[tw`w-1.5 h-1.5 rounded-full`, { backgroundColor: '#ffffff30' }]} />
+                                    </View>
+                                )}
                             </View>
                         )}
 
-                        {/* Headline */}
                         <View style={{ alignItems: 'center', marginBottom: gapSm }}>
-                            {item.typewriter && index === currentIndex ? (
-                                <TypewriterText text={item.headline} size={headlineSize} />
+                            {slide.typewriter ? (
+                                <TypewriterText text={slide.headline} size={headlineSize} />
                             ) : (
-                                    <Text weight="bold" style={tw`text-3xl text-white mb-2 text-center`}>
-                                    {item.headline}
+                                <Text weight="bold" style={{ fontSize: headlineSize, color: '#fff', textAlign: 'center' }}>
+                                    {slide.headline}
                                 </Text>
                             )}
                         </View>
 
-                        {/* Subtitle */}
-                        <Text style={{ fontSize: subtitleSize, color: '#9ca3af', textAlign: 'center', lineHeight: subtitleSize * 1.65, paddingHorizontal: 4 }}>
-                            {item.subtitle}
+                        <Text style={{
+                            fontSize: subtitleSize,
+                            color: '#9ca3af',
+                            textAlign: 'center',
+                            lineHeight: subtitleSize * 1.65,
+                            paddingHorizontal: 4,
+                        }}>
+                            {slide.subtitle}
                         </Text>
-                    </View>
+                    </>
                 )}
-            />
+            </View>
 
             {/* Bottom */}
-            <View 
-                style={[tw`px-8 justify-center gap-4`, 
-                    { height: BOTTOM_H }]}>
-                <View 
-                    style={tw`flex-row justify-center gap-2`}>
-                    {SLIDES.map((_, i) => {
-                        const inputRange = [(i - 1) * width, i * width, (i + 1) * width]
-                        const dotWidth = scrollX.interpolate({ inputRange, outputRange: [8, 24, 8], extrapolate: 'clamp' })
-                        const dotOpacity = scrollX.interpolate({ inputRange, outputRange: [0.3, 1, 0.3], extrapolate: 'clamp' })
-                        return (
-                            <Animated.View
-                                key={i}
-                                style={[tw`h-2 rounded-full bg-white`, 
-                                    { width: dotWidth, opacity: dotOpacity }]}
-                            />
-                        )
-                    })}
+            <View style={{
+                paddingHorizontal: 32,
+                paddingBottom: 40,
+                paddingTop: 16,
+                gap: 16,
+            }}>
+                {/* Dots */}
+                <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
+                    {SLIDES.map((_, i) => (
+                        <TouchableOpacity key={i} onPress={() => setCurrentIndex(i)} style={{ padding: 4 }}>
+                            <View style={[tw`h-2 rounded-full bg-white`, {
+                                width: i === currentIndex ? 24 : 8,
+                                opacity: i === currentIndex ? 1 : 0.3,
+                            }]} />
+                        </TouchableOpacity>
+                    ))}
                 </View>
 
-                <TouchableOpacity 
-                    onPress={goToNext} 
-                    style={tw`w-full bg-white py-4 rounded-2xl items-center`}>
-                    <Text 
-                        weight="bold"   
-                            style={tw`text-[#0B0B0B] text-lg`}>
+                <TouchableOpacity
+                    onPress={goToNext}
+                    style={tw`w-full bg-white py-4 rounded-2xl items-center`}
+                >
+                    <Text weight="bold" style={tw`text-[#0B0B0B] text-lg`}>
                         {currentIndex === SLIDES.length - 1 ? 'Get Started' : 'Next'}
                     </Text>
                 </TouchableOpacity>
             </View>
-
         </View>
     )
 }
